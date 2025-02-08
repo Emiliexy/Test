@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>观世音菩萨在线拜拜</title>
+    <!-- Google AdSense 验证代码 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2909094795372025"
+     crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -14,43 +17,52 @@
             <div class="sound-control">
                 <button id="soundToggle" class="sound-button" title="开关音效">
                     <span class="sound-icon">🔔</span>
-                    <span class="sound-text">唱诵中</span>
+                    <span class="sound-text">诵经声</span>
                 </button>
+                <div class="volume-control">
+                    <input type="range" id="volumeSlider" class="volume-slider" 
+                           min="0" max="100" value="50" title="音量调节">
+                </div>
             </div>
         </header>
 
-        <main>
-            <div class="buddha-image">
-                <img src="images/guanyin1.jpg" alt="观世音菩萨" id="buddhaImage">
-                <div class="light-effect"></div>
+        <main class="main-content">
+            <!-- 左侧内容区：菩萨图片和留言板 -->
+            <div class="main-left">
+                <div class="buddha-section">
+                    <div class="buddha-image">
+                        <img src="images/guanyin.jpg" alt="观世音菩萨" id="buddhaImage">
+                        <div class="light-effect"></div>
+                    </div>
+
+                    <div class="wish-section">
+                        <textarea id="wishInput" placeholder="请在此写下您的心愿..."></textarea>
+                        <button id="submitWish" class="golden-button">祈愿行拜礼</button>
+                    </div>
+
+                    <div class="worship-section">
+                        <button id="worshipButton" class="worship-button">
+                            <span class="button-text">诚心拜拜</span>
+                        </button>
+                        <button id="checkInButton" class="check-in-button">
+                            每日签到
+                        </button>
+                    </div>
+
+                    <div class="stats">
+                        <span>累计签到：<span id="checkInDays">0</span> 天</span>
+                    </div>
+                </div>
+
+                <div class="buddhist-wisdom">
+                    <h3>今日佛学小语</h3>
+                    <p id="dailyWisdom"></p>
+                </div>
             </div>
 
-            <div class="wish-section">
-                <textarea id="wishInput" placeholder="请在此写下您的心愿..."></textarea>
-                <button id="submitWish" class="golden-button">提交祈愿</button>
-            </div>
-
-            <div class="worship-section">
-                <button id="worshipButton" class="worship-button">
-                    <span class="button-text">诚心拜拜</span>
-                </button>
-                <button id="checkInButton" class="check-in-button">
-                    每日签到
-                </button>
-            </div>
-
-            <div class="stats">
-                <span>累计签到：<span id="checkInDays">0</span> 天</span>
-            </div>
-
-            <div class="wishes-display">
-                <h2>大家的祈愿</h2>
-                <div id="wishesList" class="wishes-list"></div>
-            </div>
-
-            <div class="buddhist-wisdom">
-                <h3>今日佛学小语</h3>
-                <p id="dailyWisdom"></p>
+            <!-- 右侧祈愿墙 -->
+            <div class="main-right">
+                <div id="wishScroller" class="wish-scroller"></div>
             </div>
         </main>
 
@@ -61,5 +73,6 @@
 
     <audio id="bellSound" src="audio/bellbell.mp3" preload="auto"></audio>
     <script src="js/main.js"></script>
+    <script src="js/wishScroller.js"></script>
 </body>
 </html> 
