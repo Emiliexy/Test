@@ -9,20 +9,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const bellSound = document.getElementById('bellSound');
     const soundToggle = document.getElementById('soundToggle');
     const volumeSlider = document.getElementById('volumeSlider');
-    const checkInDays = document.getElementById('checkInDays');
-    const worshipButton = document.getElementById('worshipButton');
-    const checkInButton = document.getElementById('checkInButton');
 
-    console.log('提交按钮元素:', submitWish);
-    console.log('输入框元素:', wishInput);
-
-    // 检查元素是否正确获取
     console.log('DOM元素检查:', {
         submitWish: !!submitWish,
         wishInput: !!wishInput,
         buddhaImage: !!buddhaImage,
-        lightEffect: !!lightEffect
+        lightEffect: !!lightEffect,
+        bellSound: !!bellSound,
+        soundToggle: !!soundToggle,
+        volumeSlider: !!volumeSlider
     });
+
+    if (!submitWish || !wishInput) {
+        console.error('找不到祈愿相关的DOM元素');
+        return;
+    }
 
     // 音效状态和音量
     let isSoundMuted = localStorage.getItem('isSoundMuted') === 'true';
@@ -60,11 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
             updateSoundButtonState();
             
             if (isSoundMuted) {
+                // 静音时暂停音频
                 bellSound.pause();
                 bellSound.currentTime = 0;
+                soundToggle.querySelector('.sound-text').textContent = '暂停中';
             } else {
-                // 切换到播放状态时播放完整音效
+                // 取消静音时播放音频
                 playTestSound();
+                soundToggle.querySelector('.sound-text').textContent = '唱诵中';
             }
         } catch (error) {
             console.error('音频控制错误:', error);
@@ -250,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateSoundButtonState() {
         soundToggle.classList.toggle('muted', isSoundMuted);
         soundToggle.querySelector('.sound-icon').textContent = isSoundMuted ? '🔕' : '🔔';
-        soundToggle.querySelector('.sound-text').textContent = isSoundMuted ? '静音中' : '唱诵中';
+        soundToggle.querySelector('.sound-text').textContent = isSoundMuted ? '暂停中' : '唱诵中';
         soundToggle.title = isSoundMuted ? '开启音效' : '关闭音效';
     }
 
@@ -269,84 +273,59 @@ document.addEventListener('DOMContentLoaded', () => {
     // 初始化
     initializeApp();
 
-    // 拜拜按钮点击事件
-    worshipButton.addEventListener('click', () => {
-        playWorshipAnimation();
-        playBellSound();
-        saveWorshipRecord();
-    });
-
-    // 签到按钮点击事件
-    checkInButton.addEventListener('click', () => {
-        handleCheckIn();
-    });
-
     // 修改提交祈愿事件处理
-    submitWish.addEventListener('click', () => {
-        console.log('提交按钮被点击');
+    submitWish.addEventListener('click', function() {
+        console.log('祈愿按钮被点击');
         const wishText = wishInput.value.trim();
         
         if (wishText) {
+            console.log('提交祈愿:', wishText);
+            
+            // 添加金光效果
+            const lightEffect = document.querySelector('.light-effect');
+            if (lightEffect) {
+                lightEffect.style.animation = 'none';
+                lightEffect.offsetHeight; // 触发重绘
+                lightEffect.style.animation = 'glowEffect 2s ease-in-out';
+            } else {
+                console.error('找不到 light-effect 元素');
+            }
+
             // 显示佛光效果
             const buddhaImage = document.querySelector('.buddha-image');
-            buddhaImage.classList.add('worshipping');
-            
-            // 创建多个光晕效果
-            createMultipleGlowEffects();
-            
-            // 显示提交成功消息
-            showMessage('祈愿已提交，愿菩萨保佑', 2000);
-            
-            // 创建新祈愿
-            const wish = {
-                id: Date.now().toString(),
-                content: wishText,
-                user: generateUserId(),
-                time: formatDate(new Date()),
-                likes: 0
-            };
-            
-            // 保存到本地存储
-            const wishes = JSON.parse(localStorage.getItem('wishes') || '[]');
-            wishes.unshift(wish);
-            localStorage.setItem('wishes', JSON.stringify(wishes.slice(0, 100)));
-            
+            if (buddhaImage) {
+                buddhaImage.classList.add('worshipping');
+                createMultipleGlowEffects();
+                
+                setTimeout(() => {
+                    buddhaImage.classList.remove('worshipping');
+                }, 2000);
+            } else {
+                console.error('找不到 buddha-image 元素');
+            }
+
+            // 添加新祈愿
+            if (typeof window.addNewWish === 'function') {
+                try {
+                    window.addNewWish(wishText);
+                    console.log('新祈愿添加成功');
+                } catch (error) {
+                    console.error('添加新祈愿失败:', error);
+                }
+            } else {
+                console.error('addNewWish 函数未定义，请确保 wishScroller.js 已正确加载');
+            }
+
+            // 播放音效
+            if (bellSound) {
+                bellSound.play().catch(err => console.log('播放音效失败:', err));
+            }
+
             // 清空输入框
             wishInput.value = '';
             
-            // 添加到祈愿台
-            const wishScroller = document.getElementById('wishScroller');
-            const scrollArea = wishScroller?.querySelector('.wishes-scroll-area');
-            
-            if (scrollArea) {
-                const wishElement = document.createElement('div');
-                wishElement.className = 'wish-item';
-                wishElement.innerHTML = `
-                    <div class="wish-header">
-                        <span class="wish-user">${wish.user}</span>
-                        <span class="wish-time">${wish.time}</span>
-                    </div>
-                    <div class="wish-content">${wish.content}</div>
-                    <div class="wish-footer">
-                        <button class="wish-like-btn">
-                            <span class="like-icon">🤲</span>
-                            <span class="like-count">0</span>
-                        </button>
-                    </div>
-                `;
-                
-                // 添加到顶部
-                if (scrollArea.firstChild) {
-                    scrollArea.insertBefore(wishElement, scrollArea.firstChild);
-                } else {
-                    scrollArea.appendChild(wishElement);
-                }
-            }
-            
-            // 2秒后移除佛光效果
-            setTimeout(() => {
-                buddhaImage.classList.remove('worshipping');
-            }, 2000);
+            // 显示成功消息
+            showMessage('祈愿已提交，愿菩萨保佑', 2000);
         } else {
             showMessage('请输入祈愿内容');
         }
@@ -363,15 +342,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 创建多个光晕效果
     function createMultipleGlowEffects() {
-        const numEffects = 3;
         const container = document.querySelector('.buddha-image');
-        
+        if (!container) return;
+
+        const numEffects = 3;
         for (let i = 0; i < numEffects; i++) {
             const glowEffect = document.createElement('div');
             glowEffect.className = 'light-effect';
             glowEffect.style.opacity = '0';
-            glowEffect.style.transform = `translateX(-50%) scale(${0.8 + i * 0.2})`;
-            glowEffect.style.animation = `glow ${1.5 + i * 0.5}s ease-out`;
+            glowEffect.style.transform = `scale(${0.8 + i * 0.2})`;
+            glowEffect.style.animation = `glowEffect ${1.5 + i * 0.5}s ease-out`;
             container.appendChild(glowEffect);
             
             // 动画结束后移除元素
@@ -400,8 +380,41 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(style);
 
+    // 初始化应用
+    function initializeApp() {
+        console.log('初始化应用...');
+        
+        // 设置每日佛学小语
+        const dailyWisdom = document.getElementById('dailyWisdom');
+        if (dailyWisdom) {
+            setDailyWisdom();
+        }
+
+        // 加载签到数据
+        loadCheckInData();
+
+        // 初始化点赞功能
+        initLikeFeature();
+
+        // 加载祈愿列表
+        loadWishes();
+    }
+
+    // 加载签到数据
+    function loadCheckInData() {
+        const checkInDays = document.getElementById('checkInDays');
+        // 只在元素存在时更新签到数据
+        if (checkInDays) {
+            const days = localStorage.getItem('checkInDays') || '0';
+            checkInDays.textContent = days;
+        }
+    }
+
     // 处理签到
     function handleCheckIn() {
+        const checkInDays = document.getElementById('checkInDays');
+        if (!checkInDays) return;  // 如果元素不存在，直接返回
+
         const today = new Date().toLocaleDateString();
         const lastCheckIn = localStorage.getItem('lastCheckIn');
         
@@ -415,6 +428,18 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             showMessage('今日已签到，明天再来！');
         }
+    }
+
+    // 设置每日佛学小语
+    function setDailyWisdom() {
+        const dailyWisdom = document.getElementById('dailyWisdom');
+        if (!dailyWisdom) return;  // 如果元素不存在，直接返回
+
+        const today = new Date().toLocaleDateString();
+        const index = Math.floor(
+            (new Date(today).getTime() / (24 * 60 * 60 * 1000)) % wisdomTexts.length
+        );
+        dailyWisdom.textContent = wisdomTexts[index];
     }
 
     // 生成随机用户标识
@@ -438,12 +463,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${year}/${month}/${day}`;
     }
 
-    // 加载签到数据
-    function loadCheckInData() {
-        const days = localStorage.getItem('checkInDays') || '0';
-        checkInDays.textContent = days;
-    }
-
     // 修改点赞事件处理
     function initLikeFeature() {
         const wishScroller = document.getElementById('wishScroller');
@@ -456,36 +475,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const wishItem = likeBtn.closest('.wish-item');
             const wishId = wishItem.dataset.id;
             
-            // 如果已经点赞过，直接返回
-            if (likeBtn.classList.contains('liked')) return;
-            
             // 更新UI
             const likeIcon = likeBtn.querySelector('.like-icon');
             const likeCount = likeBtn.querySelector('.like-count');
             const currentLikes = parseInt(likeCount.textContent || '0');
-            
-            likeBtn.classList.add('liked');
-            likeIcon.textContent = '🙏';
-            likeCount.textContent = currentLikes + 1;
             
             // 更新本地存储
             const wishes = JSON.parse(localStorage.getItem('wishes') || '[]');
             const wishIndex = wishes.findIndex(w => w.id === wishId);
             
             if (wishIndex !== -1) {
+                // 累加点赞数
                 wishes[wishIndex].likes = (wishes[wishIndex].likes || 0) + 1;
                 localStorage.setItem('wishes', JSON.stringify(wishes));
-                console.log('点赞成功，当前点赞数：', wishes[wishIndex].likes);
+                
+                // 更新UI显示
+                likeBtn.classList.add('liked');
+                likeIcon.textContent = '🙏';
+                likeCount.textContent = wishes[wishIndex].likes;
+                
+                // 添加点赞动画
+                const particle = document.createElement('span');
+                particle.className = 'like-particle';
+                particle.textContent = '🙏';
+                likeBtn.appendChild(particle);
+                
+                // 移除动画元素
+                setTimeout(() => particle.remove(), 1000);
             }
-            
-            // 添加点赞动画
-            const particle = document.createElement('span');
-            particle.className = 'like-particle';
-            particle.textContent = '🙏';
-            likeBtn.appendChild(particle);
-            
-            // 移除动画元素
-            setTimeout(() => particle.remove(), 1000);
         });
     }
 
@@ -498,8 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (scrollArea) {
             scrollArea.innerHTML = wishes.map(wish => {
                 const userId = wish.user || generateUserId();
-                const isLiked = wish.likes > 0;
-                const likeCount = wish.likes || 0;
+                const totalLikes = wish.likes || 0;  // 获取累计点赞数
                 
                 return `
                     <div class="wish-item" data-id="${wish.id}">
@@ -509,9 +525,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="wish-content">${wish.content || wish.text}</div>
                         <div class="wish-footer">
-                            <button class="wish-like-btn ${isLiked ? 'liked' : ''}" data-liked="${isLiked}">
-                                <span class="like-icon">${isLiked ? '🙏' : '🤲'}</span>
-                                <span class="like-count">${likeCount}</span>
+                            <button class="wish-like-btn">
+                                <span class="like-icon">${totalLikes > 0 ? '🙏' : '🤲'}</span>
+                                <span class="like-count">${totalLikes}</span>
                             </button>
                         </div>
                     </div>
@@ -521,15 +537,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // 初始化滚动效果
             initWishScroller();
         }
-    }
-
-    // 设置每日佛学小语
-    function setDailyWisdom() {
-        const today = new Date().toLocaleDateString();
-        const index = Math.floor(
-            (new Date(today).getTime() / (24 * 60 * 60 * 1000)) % wisdomTexts.length
-        );
-        dailyWisdom.textContent = wisdomTexts[index];
     }
 
     // 显示消息提示
@@ -554,15 +561,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             messageDiv.remove();
         }, duration);
-    }
-
-    // 初始化应用
-    function initializeApp() {
-        loadCheckInData();
-        loadWishes();
-        setDailyWisdom();
-        initializeAudio();
-        initLikeFeature();
     }
 
     // 添加自动滚动功能

@@ -132,20 +132,38 @@ header::after {
 .buddha-image .light-effect {
     position: absolute;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120%;
-    height: 120%;
-    background: radial-gradient(
-        circle,
-        rgba(255, 223, 0, 0.4) 0%,
-        rgba(255, 223, 0, 0.2) 30%,
-        rgba(255, 223, 0, 0.1) 50%,
-        transparent 70%
-    );
+    left: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
     opacity: 0;
-    transition: all 1s ease;
+}
+
+@keyframes glowEffect {
+    0% {
+        opacity: 0;
+        box-shadow: none;
+    }
+    50% {
+        opacity: 0.8;
+        box-shadow: 
+            0 0 30px rgba(255, 223, 0, 0.6),
+            0 0 60px rgba(255, 223, 0, 0.4),
+            0 0 90px rgba(255, 223, 0, 0.2),
+            inset 0 0 30px rgba(255, 223, 0, 0.6),
+            inset 0 0 60px rgba(255, 223, 0, 0.4),
+            inset 0 0 90px rgba(255, 223, 0, 0.2);
+        background: radial-gradient(
+            circle at center,
+            rgba(255, 223, 0, 0.3) 0%,
+            rgba(255, 223, 0, 0.1) 50%,
+            transparent 70%
+        );
+    }
+    100% {
+        opacity: 0;
+        box-shadow: none;
+    }
 }
 
 .buddha-image.worshipping .light-effect {
@@ -730,29 +748,54 @@ footer {
     padding: 0.5rem 0;
 }
 
-/* 佛学小语优化 */
+/* 调整右侧栏布局 */
+.main-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* 调整佛学小语样式 */
 .buddhist-wisdom {
     background: var(--wisdom-bg);
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(139, 0, 0, 0.05);
     border: 1px solid rgba(212, 175, 55, 0.2);
-    position: relative;
+    margin-top: 1rem;
 }
 
 .buddhist-wisdom h3 {
     color: var(--accent-color);
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     margin-bottom: 1rem;
     text-align: center;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    padding-bottom: 0.5rem;
 }
 
 .buddhist-wisdom p {
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.8;
     color: var(--text-color);
     text-align: justify;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .buddhist-wisdom {
+        margin-top: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .buddhist-wisdom h3 {
+        font-size: 1.1rem;
+    }
+    
+    .buddhist-wisdom p {
+        font-size: 0.9rem;
+    }
 }
 
 /* 移除之前的计数器样式 */
@@ -831,11 +874,12 @@ footer {
 
 /* 点赞动画 */
 .like-particle {
-    position: absolute;
+    position: fixed;
     pointer-events: none;
     animation: likeFloat 1s ease-out forwards;
     font-size: 1.2rem;
     opacity: 0;
+    z-index: 1000;
 }
 
 @keyframes likeFloat {
@@ -888,4 +932,199 @@ footer {
         opacity: 0.5;
         transform: translateY(0);
     }
+}
+
+/* 经文诵读模块样式 */
+.sutra-reader {
+    background: var(--wisdom-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: var(--text-color);  /* 添加文字颜色 */
+}
+
+.sutra-reader h2, .sutra-reader h3 {
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.sutra-selector {
+    margin-bottom: 2rem;
+}
+
+.sutra-list {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.sutra-button {
+    background: linear-gradient(145deg, #f2d03b, #d4af37);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sutra-button.active {
+    background: var(--accent-color);
+    color: white;
+}
+
+.sutra-content {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.sutra-description {
+    color: #666;
+    margin: 1rem 0;
+    font-style: italic;
+}
+
+.audio-player {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 8px;
+}
+
+.audio-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.play-button {
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.time-display {
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    min-width: 100px;
+    text-align: center;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+}
+
+.progress-bar:hover {
+    height: 6px;
+}
+
+.progress {
+    height: 100%;
+    background: var(--secondary-color);
+    transition: width 0.1s linear;
+}
+
+.sutra-text {
+    font-size: 1.2rem;
+    line-height: 2;
+    white-space: pre-wrap;
+    text-align: justify;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    max-height: 500px;
+    overflow-y: auto;
+    color: var(--text-color);
+    text-indent: 2em;
+    letter-spacing: 0.05em;
+}
+
+.sutra-text::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sutra-text::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.sutra-text::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+
+/* 优化经文段落间距 */
+.sutra-text p {
+    margin-bottom: 1em;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .sutra-reader {
+        padding: 1rem;
+    }
+
+    .sutra-content {
+        padding: 1rem;
+    }
+
+    .sutra-text {
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+}
+
+/* 修改模块标题样式 */
+.module-title {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    text-align: left;  /* 改为左对齐 */
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    padding-left: 1rem;  /* 添加左侧内边距 */
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 调整经文阅读器标题样式 */
+.sutra-reader .module-title {
+    margin-top: 0;
+    padding-left: 0;  /* 由于父容器已有内边距，这里不需要额外的左边距 */
+    text-align: left !important;  /* 强制左对齐 */
+}
+
+/* 只让 h3 保持居中对齐（经文标题） */
+.sutra-reader h3 {
+    text-align: center;
+}
+
+/* 调整拜观音模块标题样式 */
+.buddha-worship .module-title {
+    padding-left: 0;  /* 由于父容器已有内边距，这里不需要额外的左边距 */
+}
+
+/* 调整拜观音模块样式 */
+.buddha-worship {
+    background: var(--wisdom-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
 } 

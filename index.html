@@ -3,7 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>观世音菩萨在线拜拜</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>【在线佛堂】观音菩萨在线祈福 | 即时诵经念佛 | BrahmaSound</title>
+    
+    <meta name="description" content="BrahmaSound数字佛堂为您开启云端礼佛新体验。在线供奉观音菩萨，即时祈愿诵经，提供《般若波罗蜜多心经》《普门品》等经典诵读。每日佛号共修、功德回向指引，助您居家净心、消灾增慧。无论身在何处，皆可礼敬观音菩萨，获慈悲加持。">
+    
+    <meta name="keywords" content="在线拜观音,观音菩萨在线祈福,般若波罗蜜多心经诵读,普门品念诵,佛教在线修行,念佛共修,观音菩萨圣号,居家拜佛,数字佛堂,佛经在线听诵,菩提心修行,佛教心灵成长,慈悲加持,消灾祈福,佛教文化传承">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="【在线佛堂】观音菩萨在线祈福 | 即时诵经念佛 | BrahmaSound">
+    <meta property="og:description" content="BrahmaSound数字佛堂为您开启云端礼佛新体验。在线供奉观音菩萨，即时祈愿诵经。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://brahmasound.com">
+    
     <!-- Google AdSense 验证代码 -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2909094795372025"
      crossorigin="anonymous"></script>
@@ -27,42 +40,46 @@
         </header>
 
         <main class="main-content">
-            <!-- 左侧内容区：菩萨图片和留言板 -->
-            <div class="main-left">
-                <div class="buddha-section">
+            <!-- 左侧：菩萨图片和经文诵读 -->
+            <div class="md:col-span-2">
+                <!-- 礼拜观音模块 -->
+                <div class="buddha-worship">
+                    <h2 class="module-title">礼拜观音</h2>
                     <div class="buddha-image">
-                        <img src="images/guanyin.jpg" alt="观世音菩萨" id="buddhaImage">
+                        <img src="images/guanyin.jpg" alt="观世音菩萨" id="buddhaImage" />
                         <div class="light-effect"></div>
                     </div>
-
+                    <!-- 祈愿输入区域 -->
                     <div class="wish-section">
                         <textarea id="wishInput" placeholder="请在此写下您的心愿..."></textarea>
                         <button id="submitWish" class="golden-button">祈愿行拜礼</button>
                     </div>
-
-                    <div class="worship-section">
-                        <button id="worshipButton" class="worship-button">
-                            <span class="button-text">诚心拜拜</span>
-                        </button>
-                        <button id="checkInButton" class="check-in-button">
-                            每日签到
-                        </button>
-                    </div>
-
-                    <div class="stats">
-                        <span>累计签到：<span id="checkInDays">0</span> 天</span>
-                    </div>
                 </div>
-
-                <div class="buddhist-wisdom">
-                    <h3>今日佛学小语</h3>
-                    <p id="dailyWisdom"></p>
-                </div>
+                
+                <!-- 经文诵读模块会通过 JS 插入到这里 -->
             </div>
 
             <!-- 右侧祈愿墙 -->
             <div class="main-right">
                 <div id="wishScroller" class="wish-scroller"></div>
+                
+                <!-- 添加佛学小语到右侧栏 -->
+                <div class="buddhist-wisdom">
+                    <h3>今日佛学小语</h3>
+                    <p id="dailyWisdom"></p>
+                </div>
+                
+                <div class="mt-4">
+                    <div class="ad-container">
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-2909094795372025"
+                             data-ad-slot="5586213646"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true">
+                        </ins>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -72,7 +89,8 @@
     </div>
 
     <audio id="bellSound" src="audio/bellbell.mp3" preload="auto"></audio>
-    <script src="js/main.js"></script>
     <script src="js/wishScroller.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/sutraReader.js"></script>
 </body>
 </html> 
