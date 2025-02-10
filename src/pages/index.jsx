@@ -1,5 +1,6 @@
 import React from 'react';
 import WishScroller from '../components/WishScroller';
+import AdUnit from '../components/AdUnit';
 
 function Home() {
   return (
@@ -12,11 +13,19 @@ function Home() {
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 h-full">
               {/* 原有的图片和留言内容 */}
             </div>
+            {/* 在内容下方添加广告 */}
+            <div className="mt-4">
+              <AdUnit />
+            </div>
           </div>
           
           {/* 右侧：祈愿墙 */}
           <div className="h-full">
             <WishScroller />
+            {/* 在祈愿墙下方添加广告 */}
+            <div className="mt-4">
+              <AdUnit />
+            </div>
           </div>
         </div>
       </div>
