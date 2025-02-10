@@ -161,90 +161,114 @@ function initWishScroller() {
     let currentIndex = 0;
     const visibleCount = 3;  // 同时显示3个祈愿
 
+    // 初始化祈愿列表
     function initializeWishes() {
-        // 清空现有内容
-        scrollArea.innerHTML = '';
-        // 显示初始的3个愿望
+        const scrollArea = document.querySelector('.wishes-scroll-area');
+        if (!scrollArea) return;
+
+        // 确保至少有两倍visibleCount数量的祈愿
+        const minWishes = visibleCount * 2;
+        while (allWishes.length < minWishes) {
+            allWishes = [...allWishes, ...DEFAULT_WISHES.map(content => ({
+                id: Date.now().toString() + Math.random(),
+                content,
+                user: generateRandomId(),
+                time: formatDate(),
+                likes: 0
+            }))];
+        }
+
+        // 初始显示
         for (let i = 0; i < visibleCount; i++) {
-            const wishIndex = (currentIndex + i) % allWishes.length;
-            const wishElement = createWishElement(allWishes[wishIndex]);
+            const wish = allWishes[i];
+            const wishElement = createWishElement(wish);
             scrollArea.appendChild(wishElement);
         }
+
+        // 启动自动滚动
+        startAutoScroll(scrollArea);
     }
 
-    function smoothScroll() {
-        const scrollArea = document.querySelector('.wishes-scroll-area');
-        if (!scrollArea) {
-            console.error('找不到滚动区域元素');
-            return;
-        }
+    // 自动滚动功能
+    function startAutoScroll(scrollArea) {
+        const scrollSpeed = 1; // 滚动速度（像素/帧）
+        let isScrolling = true;
+        let lastTimestamp = 0;
 
-        // 使用 firstElementChild 替代 firstChild
-        const firstElement = scrollArea.firstElementChild;
-        if (!firstElement) {
-            console.log('没有可滚动的元素');
-            return;
-        }
-
-        try {
-            // 设置过渡动画
-            firstElement.style.transition = 'all 1s ease-in-out';
-            firstElement.style.opacity = '0';
-            firstElement.style.transform = 'translateY(-100%)';
-
-            // 延迟移除元素
-            setTimeout(() => {
-                if (firstElement.parentNode) {
-                    firstElement.remove();
-                }
-            }, 1000);
-
-            // 获取下一个要显示的愿望
-            const nextIndex = (currentIndex + visibleCount) % allWishes.length;
-            const nextWish = allWishes[nextIndex];
-            if (!nextWish) {
-                console.error('找不到下一个愿望');
+        function scroll(timestamp) {
+            if (!isScrolling) {
+                lastTimestamp = timestamp;
+                requestAnimationFrame(scroll);
                 return;
             }
 
-            const newWish = createWishElement(nextWish);
-            if (!newWish) {
-                console.error('创建新愿望元素失败');
-                return;
+            // 计算时间差，保持平滑滚动
+            const deltaTime = timestamp - lastTimestamp;
+            lastTimestamp = timestamp;
+
+            // 获取所有祈愿元素
+            const wishes = Array.from(scrollArea.children);
+            if (wishes.length === 0) return;
+
+            // 移动第一个元素
+            const firstWish = wishes[0];
+            const currentTransform = parseFloat(firstWish.style.transform?.split('translateY(')[1] || 0);
+            const newTransform = currentTransform - scrollSpeed * (deltaTime / 16); // 基于60fps标准化速度
+
+            // 当第一个元素完全滚出可视区域时
+            if (newTransform <= -firstWish.offsetHeight) {
+                // 创建新的祈愿元素
+                const nextIndex = (currentIndex + visibleCount) % allWishes.length;
+                const nextWish = allWishes[nextIndex];
+                const newWishElement = createWishElement(nextWish);
+                
+                // 设置初始位置
+                newWishElement.style.transform = `translateY(${wishes[wishes.length - 1].offsetHeight}px)`;
+                newWishElement.style.opacity = '0';
+                
+                // 添加到底部
+                scrollArea.appendChild(newWishElement);
+
+                // 触发动画
+                requestAnimationFrame(() => {
+                    newWishElement.style.transition = 'all 1s ease-in-out';
+                    newWishElement.style.opacity = '1';
+                    newWishElement.style.transform = 'translateY(0)';
+                });
+
+                // 移除第一个元素
+                firstWish.style.transition = 'all 1s ease-in-out';
+                firstWish.style.opacity = '0';
+                setTimeout(() => firstWish.remove(), 1000);
+
+                // 更新索引
+                currentIndex = (currentIndex + 1) % allWishes.length;
+            } else {
+                // 继续移动所有元素
+                wishes.forEach(wish => {
+                    wish.style.transform = `translateY(${newTransform}px)`;
+                });
             }
-            
-            // 设置初始状态
-            newWish.style.opacity = '0';
-            newWish.style.transform = 'translateY(20px)';
-            scrollArea.appendChild(newWish);
 
-            // 触发动画
-            requestAnimationFrame(() => {
-                newWish.style.transition = 'all 1s ease-in-out';
-                newWish.style.opacity = '1';
-                newWish.style.transform = 'translateY(0)';
-            });
-
-            // 更新索引
-            currentIndex = (currentIndex + 1) % allWishes.length;
-        } catch (error) {
-            console.error('滚动动画出错:', error);
+            requestAnimationFrame(scroll);
         }
+
+        // 鼠标悬停时暂停滚动
+        scrollArea.addEventListener('mouseenter', () => {
+            isScrolling = false;
+        });
+
+        // 鼠标离开时恢复滚动
+        scrollArea.addEventListener('mouseleave', () => {
+            isScrolling = true;
+        });
+
+        // 开始滚动
+        requestAnimationFrame(scroll);
     }
 
     // 初始化显示
     initializeWishes();
-
-    // 开始定时滚动，添加错误处理
-    const scrollInterval = setInterval(() => {
-        try {
-            smoothScroll();
-        } catch (error) {
-            console.error('滚动出错:', error);
-            // 可选：清除定时器
-            // clearInterval(scrollInterval);
-        }
-    }, 4000);
 
     // 初始化点赞功能
     initLikeButtons();

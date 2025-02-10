@@ -1055,6 +1055,10 @@ footer {
     letter-spacing: 0.05em;
 }
 
+.sutra-text p {
+    margin-bottom: 1em;
+}
+
 .sutra-text::-webkit-scrollbar {
     width: 8px;
 }
@@ -1067,11 +1071,6 @@ footer {
 .sutra-text::-webkit-scrollbar-thumb {
     background: var(--secondary-color);
     border-radius: 4px;
-}
-
-/* 优化经文段落间距 */
-.sutra-text p {
-    margin-bottom: 1em;
 }
 
 /* 移动端适配 */
