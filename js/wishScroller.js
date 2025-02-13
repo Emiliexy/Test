@@ -41,11 +41,11 @@ function initLikeButtons() {
             if (likeBtn.classList.contains('liked')) {
                 likeBtn.classList.remove('liked');
                 likeCount.textContent = currentCount - 1;
-                likeIcon.textContent = '🤲';  // 修改这里：取消点赞时恢复为合掌
+                likeIcon.textContent = '🤲';  // 取消点赞时显示合掌
             } else {
                 likeBtn.classList.add('liked');
                 likeCount.textContent = currentCount + 1;
-                likeIcon.textContent = '🙏';  // 点赞时变为合掌
+                likeIcon.textContent = '🙏';  // 点赞时显示合掌
                 
                 // 添加点赞动画效果
                 createLikeParticle(likeBtn);

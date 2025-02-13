@@ -2,6 +2,7 @@ import React from 'react';
 import WishScroller from '../components/WishScroller';
 import AdUnit from '../components/AdUnit';
 import SutraReader from '../components/Sutra';
+import BlogSection from '../components/BlogSection';
 
 function Home() {
   return (
@@ -26,6 +27,11 @@ function Home() {
             {/* 经文诵读模块 */}
             <div className="mt-6">
               <SutraReader />
+            </div>
+
+            {/* 佛学文章模块 */}
+            <div className="mt-6">
+              <BlogSection />
             </div>
             
             {/* 广告区域 */}
