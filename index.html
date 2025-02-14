@@ -32,6 +32,7 @@
      crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <script src="js/navbar.js"></script>
 </head>
 <body>
     <div class="container">
@@ -51,22 +52,55 @@
 
         <main class="main-content">
             <!-- 左侧：菩萨图片和经文诵读 -->
-            <div class="md:col-span-2">
+            <div class="main-left">
                 <!-- 礼拜观音模块 -->
-                <div class="buddha-worship">
-                    <h2 class="module-title">礼拜观音</h2>
-                    <div class="buddha-image">
-                        <img src="images/guanyin.jpg" alt="观世音菩萨" id="buddhaImage" />
-                        <div class="light-effect"></div>
-                    </div>
-                    <!-- 祈愿输入区域 -->
-                    <div class="wish-section">
-                        <textarea id="wishInput" placeholder="请在此写下您的心愿..."></textarea>
-                        <button id="submitWish" class="golden-button">祈愿行拜礼</button>
+                <div id="worship" class="buddha-section">
+                    <div class="buddha-worship">
+                        <h2 class="module-title">礼拜观音</h2>
+                        <div class="buddha-image">
+                            <img src="images/guanyin.jpg" alt="观世音菩萨" id="buddhaImage" />
+                            <div class="light-effect"></div>
+                        </div>
+                        <!-- 祈愿输入区域 -->
+                        <div class="wish-section">
+                            <div class="wish-input-wrapper">
+                                <textarea 
+                                    id="wishInput" 
+                                    placeholder="南无观世音菩萨，弟子在此虔诚祈愿..."
+                                    maxlength="100"
+                                ></textarea>
+                                <div class="word-count">0/100</div>
+                            </div>
+                            <div class="wish-buttons">
+                                <button id="submitWish" class="golden-button">
+                                    祈愿行拜礼
+                                    <div class="countdown"></div>
+                                </button>
+                                <button id="directWorship" class="golden-button direct-worship">
+                                    直接行拜礼
+                                    <div class="countdown"></div>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- 经文诵读模块会通过 JS 插入到这里 -->
+                <!-- 诵经念佛模块 -->
+                <div id="sutra" class="sutra-section">
+                    <div class="sutra-reader">
+                        <h2 class="module-title">诵经念佛</h2>
+                        <!-- 经文诵读模块会通过 JS 插入到这里 -->
+                        <div id="sutraContent"></div>
+                    </div>
+                </div>
+                
+                <!-- 佛法修行模块 -->
+                <div id="blog" class="blog-section">
+                    <div class="buddhist-teachings">
+                        <h2 class="module-title">佛法修行</h2>
+                        <div id="blogContent"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- 右侧祈愿墙 -->
@@ -77,18 +111,6 @@
                 <div class="buddhist-wisdom">
                     <h3>今日佛学小语</h3>
                     <p id="dailyWisdom"></p>
-                </div>
-                
-                <div class="mt-4">
-                    <div class="ad-container">
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-2909094795372025"
-                             data-ad-slot="5586213646"
-                             data-ad-format="auto"
-                             data-full-width-responsive="true">
-                        </ins>
-                    </div>
                 </div>
             </div>
         </main>
@@ -104,5 +126,11 @@
     <script src="js/sutraReader.js"></script>
     <script src="js/blogSection.js"></script>
     <script src="js/buddhistCalendar.js"></script>
+    <div class="click-hint">
+        请长按3秒完成礼佛 🙏
+    </div>
+    <div class="chanting-guide">
+        请默念：南无大慈大悲观世音菩萨 🙏
+    </div>
 </body>
 </html> 

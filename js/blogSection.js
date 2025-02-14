@@ -1,5 +1,13 @@
 const BLOG_POSTS = [
   {
+    id: 3,
+    title: '如何求观世音菩萨庇佑？完整祈愿指南',
+    excerpt: '观世音菩萨，作为大悲菩萨，广受佛教信徒崇敬。本文将介绍如何向观世音菩萨祈愿，求得观音菩萨的慈悲庇佑。无论是通过焚香、诵经还是冥想，信徒们都能通过虔诚的祈愿获得菩萨的保佑与指引。',
+    date: '2025-02-14',
+    link: '/blog/how-to-seek-guanyin-bodhisattva-blessings.html',
+    thumbnail: './images/guan-yin-guide.jpg'
+  },
+  {
     id: 1,
     title: '观音诞如何拜拜？详细指南与习俗解读',
     excerpt: '观音诞是纪念观世音菩萨的重要节日，本文详细介绍了观音诞的文化背景、拜拜习俗与正确步骤，帮助信徒更好地表达虔诚...',
@@ -18,10 +26,15 @@ const BLOG_POSTS = [
 ];
 
 function initBlogSection() {
-  const blogContainer = document.createElement('div');
-  blogContainer.className = 'blog-section';
-  blogContainer.innerHTML = `
-    <h2 class="module-title">佛法修行</h2>
+  // 获取已存在的博客内容容器
+  const blogContent = document.querySelector('#blogContent');
+  if (!blogContent) {
+    console.error('找不到博客内容容器');
+    return;
+  }
+
+  // 添加博客文章
+  blogContent.innerHTML = `
     <div class="blog-grid">
       ${BLOG_POSTS.map(post => `
         <article class="blog-card" data-link="${post.link}">
@@ -50,14 +63,8 @@ function initBlogSection() {
     </div>
   `;
 
-  // 添加到经文诵读模块后面
-  const sutraReader = document.querySelector('.sutra-reader');
-  if (sutraReader) {
-    sutraReader.parentNode.insertBefore(blogContainer, sutraReader.nextSibling);
-  }
-
   // 添加点击事件
-  const blogCards = blogContainer.querySelectorAll('.blog-card');
+  const blogCards = blogContent.querySelectorAll('.blog-card');
   blogCards.forEach(card => {
     card.addEventListener('click', () => {
       const link = card.dataset.link;

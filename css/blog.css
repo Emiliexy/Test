@@ -356,4 +356,210 @@
     font-size: 0.9rem;
     font-style: italic;
     font-family: "楷体", "Noto Serif SC", serif;
+}
+
+/* 祈愿文样式 */
+.prayer-text {
+    background: rgba(255, 248, 225, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    margin: 1rem 0;
+    font-family: "楷体", "Noto Serif SC", serif;
+    font-size: 1.1rem;
+    line-height: 2;
+    color: var(--text-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.prayer-text::before {
+    content: '🙏';
+    position: absolute;
+    top: -0.5rem;
+    left: -0.5rem;
+    font-size: 1.5rem;
+    background: var(--wisdom-bg);
+    padding: 0.2rem;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.prayer-text p {
+    margin-bottom: 1rem;
+    text-indent: 0;
+}
+
+.prayer-text p:last-child {
+    margin-bottom: 0;
+}
+
+/* 强调特定文字 */
+.prayer-text strong {
+    color: var(--accent-color);
+    font-weight: normal;
+}
+
+.blog-post {
+    max-width: 800px;
+    margin: 0 auto;
+    background: linear-gradient(to bottom, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 20px rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.post-content {
+    line-height: 1.8;
+    margin: 0 auto;
+}
+
+.post-content h1 {
+    font-size: 2rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    text-align: center;
+    position: relative;
+    padding-top: 60px;  /* 为顶部莲花图标留出空间 */
+}
+
+.post-content h1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background-image: url('../images/lotus.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.post-meta {
+    color: #666;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.post-section {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.post-section h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.post-section p {
+    margin-bottom: 1rem;
+    text-indent: 2em;
+}
+
+.post-section p:last-child {
+    margin-bottom: 0;
+}
+
+.post-section h3 {
+    color: var(--accent-color);
+    margin: 1.5rem 0 1rem;
+    font-size: 1.2rem;
+}
+
+.post-section h2::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    background-image: url('../images/buddha-hand.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* 文章导航标签样式 */
+.post-nav {
+    margin: 2rem 0;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    position: sticky;
+    top: 80px;
+    z-index: 100;
+}
+
+.post-tabs {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.post-tab {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 20px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.post-tab:hover,
+.post-tab.active {
+    background: var(--accent-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(139, 0, 0, 0.2);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .post-tabs {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .post-tab {
+        text-align: center;
+    }
+}
+
+/* 返回首页按钮样式 */
+.back-to-home {
+    text-align: center;
+    margin: 3rem 0 1rem;
+}
+
+.back-link {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: var(--accent-color);
+    color: var(--primary-color);
+    text-decoration: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 10px rgba(139, 0, 0, 0.2);
+}
+
+.back-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+    background: #a00000;
 } 

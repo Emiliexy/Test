@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 首先获取所有需要的DOM元素
     const submitWish = document.getElementById('submitWish');
+    const directWorship = document.getElementById('directWorship');
     const wishInput = document.getElementById('wishInput');
     const buddhaImage = document.getElementById('buddhaImage');
     const lightEffect = document.querySelector('.light-effect');
@@ -48,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 音频加载成功处理
     bellSound.oncanplaythrough = function() {
         console.log('音频加载完成，可以播放');
-        showMessage('音效已就绪');
     };
 
     updateSoundButtonState();
@@ -273,61 +273,108 @@ document.addEventListener('DOMContentLoaded', () => {
     // 初始化
     initializeApp();
 
-    // 修改提交祈愿事件处理
-    submitWish.addEventListener('click', function() {
-        console.log('祈愿按钮被点击');
-        const wishText = wishInput.value.trim();
-        
-        if (wishText) {
-            console.log('提交祈愿:', wishText);
-            
-            // 添加金光效果
-            const lightEffect = document.querySelector('.light-effect');
-            if (lightEffect) {
-                lightEffect.style.animation = 'none';
-                lightEffect.offsetHeight; // 触发重绘
-                lightEffect.style.animation = 'glowEffect 2s ease-in-out';
-            } else {
-                console.error('找不到 light-effect 元素');
-            }
+    // 长按处理函数
+    function handleLongPress(button, callback) {
+        let pressTimer;
+        let isPressed = false;
+        const chantingGuide = document.querySelector('.chanting-guide');
+        const clickHint = document.querySelector('.click-hint');
+        let clickTimeout;
 
-            // 显示佛光效果
-            const buddhaImage = document.querySelector('.buddha-image');
-            if (buddhaImage) {
-                buddhaImage.classList.add('worshipping');
-                createMultipleGlowEffects();
-                
-                setTimeout(() => {
-                    buddhaImage.classList.remove('worshipping');
-                }, 2000);
-            } else {
-                console.error('找不到 buddha-image 元素');
-            }
+        button.addEventListener('mousedown', startPress);
+        button.addEventListener('touchstart', startPress);
+        button.addEventListener('mouseup', endPress);
+        button.addEventListener('touchend', endPress);
+        button.addEventListener('mouseleave', endPress);
 
-            // 添加新祈愿
-            if (typeof window.addNewWish === 'function') {
-                try {
-                    window.addNewWish(wishText);
-                    console.log('新祈愿添加成功');
-                } catch (error) {
-                    console.error('添加新祈愿失败:', error);
+        // 添加点击事件监听
+        button.addEventListener('click', (e) => {
+            // 如果是祈愿按钮，检查输入框
+            if (button.id === 'submitWish') {
+                const wish = wishInput.value.trim();
+                if (!wish) {
+                    showMessage('请先写下您的心愿...');
+                    return;
                 }
-            } else {
-                console.error('addNewWish 函数未定义，请确保 wishScroller.js 已正确加载');
             }
+
+            // 显示提示
+            clickHint.classList.add('show');
+            // 2秒后隐藏提示
+            clearTimeout(clickTimeout);
+            clickTimeout = setTimeout(() => {
+                clickHint.classList.remove('show');
+            }, 2000);
+        });
+
+        function startPress(e) {
+            if (e.type === 'touchstart') {
+                e.preventDefault();
+            }
+
+            // 如果是祈愿按钮，检查输入框
+            if (button.id === 'submitWish') {
+                const wish = wishInput.value.trim();
+                if (!wish) {
+                    showMessage('请先写下您的心愿...');
+                    return;
+                }
+            }
+
+            isPressed = true;
+            button.classList.add('pressing');
+            chantingGuide.classList.add('show');
+            clickHint.classList.remove('show');  // 开始长按时隐藏点击提示
+
+            pressTimer = setTimeout(() => {
+                if (isPressed) {
+                    button.classList.remove('pressing');
+                    chantingGuide.classList.remove('show');
+                    callback();
+                }
+            }, 3000);
+        }
+
+        function endPress() {
+            isPressed = false;
+            clearTimeout(pressTimer);
+            button.classList.remove('pressing');
+            chantingGuide.classList.remove('show');
+        }
+    }
+
+    // 处理祈愿提交
+    handleLongPress(submitWish, async () => {
+        const wish = wishInput.value.trim();
+        if (!wish) {
+            showMessage('请先写下您的心愿...');
+            return;
+        }
+
+        try {
+            // 使用相同的发光效果
+            performDirectWorship();
 
             // 播放音效
-            if (bellSound) {
-                bellSound.play().catch(err => console.log('播放音效失败:', err));
+            if (!isSoundMuted && bellSound) {
+                if (!bellSound.paused) {
+                    bellSound.currentTime = 0;
+                }
+                await bellSound.play();
             }
 
             // 清空输入框
             wishInput.value = '';
             
-            // 显示成功消息
-            showMessage('祈愿已提交，愿菩萨保佑', 2000);
-        } else {
-            showMessage('请输入祈愿内容');
+            // 更新字数统计
+            if (wordCount) {
+                wordCount.textContent = '0/100';
+                wordCount.style.color = '#999';
+            }
+
+        } catch (error) {
+            console.error('祈愿过程出错:', error);
+            showMessage('祈愿过程出现问题，请重试');
         }
     });
 
@@ -611,4 +658,37 @@ document.addEventListener('DOMContentLoaded', () => {
         // 开始滚动
         requestAnimationFrame(autoScroll);
     }
+
+    // 添加直接行拜礼功能
+    function performDirectWorship() {
+        // 添加光效
+        buddhaImage.classList.add('worshipping');
+        lightEffect.style.opacity = '1';
+        setTimeout(() => {
+            buddhaImage.classList.remove('worshipping');
+            lightEffect.style.opacity = '0';
+        }, 2000);
+
+        // 显示祈福信息
+        showMessage('阿弥陀佛，愿您心想事成，福慧双修 🙏');
+    }
+
+    // 绑定直接行拜礼按钮事件
+    if (directWorship) {
+        handleLongPress(directWorship, performDirectWorship);
+    }
+
+    // 添加字数统计功能
+    const wordCount = document.querySelector('.word-count');
+    wishInput.addEventListener('input', () => {
+        const length = wishInput.value.length;
+        wordCount.textContent = `${length}/100`;
+        
+        // 接近字数限制时改变颜色
+        if (length >= 90) {
+            wordCount.style.color = '#ff4444';
+        } else {
+            wordCount.style.color = '#999';
+        }
+    });
 }); 

@@ -145,14 +145,17 @@ const SUTRAS = [
 
 // 初始化经文阅读器
 function initSutraReader() {
-  const sutraContainer = document.createElement('div');
-  sutraContainer.className = 'sutra-reader';
+  const sutraContainer = document.querySelector('#sutraContent');
+  if (!sutraContainer) {
+    console.error('找不到诵经念佛模块的内容区域');
+    return;
+  }
+
   sutraContainer.innerHTML = `
-    <h2 class="module-title">诵经念佛</h2>
     <div class="sutra-selector">
       <div class="sutra-list">
         ${SUTRAS.map(sutra => `
-          <button class="sutra-button" data-id="${sutra.id}">
+          <button class="sutra-button ${sutra.id === 'heart' ? 'active' : ''}" data-id="${sutra.id}">
             ${sutra.title}
           </button>
         `).join('')}
@@ -179,10 +182,6 @@ function initSutraReader() {
       </div>
     </div>
   `;
-
-  // 修改这里：使用新的选择器
-  const mainContent = document.querySelector('.md\\:col-span-2');
-  mainContent.appendChild(sutraContainer);
 
   // 创建音频元素
   const audio = new Audio(SUTRAS[0].audio);

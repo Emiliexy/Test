@@ -1,0 +1,22 @@
+/* 移除底部重复的佛法修行板块 */
+#blog.blog-section {
+    display: none !important;
+}
+
+/* 如果上面的方法不够具体，可以使用更完整的选择器 */
+div#blog.blog-section {
+    display: none !important;
+}
+
+/* 或者更具体地针对这个重复元素 */
+.blog-container > .dharma-practice-duplicate {
+    display: none;
+}
+
+/* 方案2：如果有多个佛法修行标题，隐藏第二个及之后的 */
+.blog-container h1:not(:first-of-type):has(+ .blog-section) {
+    display: none !important;
+}
+.blog-container .blog-section:not(:first-of-type) {
+    display: none !important;
+} 
