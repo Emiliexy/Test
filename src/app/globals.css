@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-gold: #B8860B;
+  --deep-gold: #A67C00;
+  --light-gold: #FFF8DC;
+  --dark-brown: #5D3A1A;
+  --burgundy: #800020;
+  --bg-cream: #FAF9F6;
+  --text-gray: #333333;
+  --scroll-gold: #D4AF37;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--text-gray);
+  font-family: "Microsoft YaHei", "Source Han Sans CN", "SimSun", sans-serif;
+  background-image: url('/images/lotus-pattern.png');
+  background-repeat: repeat;
+  background-size: 300px;
+  background-position: center;
+  background-blend-mode: soft-light;
+  background-attachment: fixed;
+}
+
+/* 自定义滚动条 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--bg-cream);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary-gold);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--deep-gold);
+}
+
+@layer utilities {
+  .glow {
+    box-shadow: 0 0 15px var(--primary-gold),
+                0 0 30px var(--primary-gold),
+                0 0 45px var(--primary-gold);
+  }
+
+  @keyframes shine {
+    0% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shine {
+    animation: shine 2s ease-in-out infinite;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply px-4 py-2 text-dark-brown hover:text-burgundy transition-colors duration-200;
+  }
+  
+  .section-title {
+    @apply text-2xl font-bold text-dark-brown text-center my-8;
+    font-family: "KaiTi", "SimKai", serif;
+  }
+  
+  .content-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .btn-primary {
+    @apply bg-burgundy text-white px-6 py-2 rounded-md hover:bg-opacity-90 transition-all duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-deep-gold text-white px-6 py-2 rounded-md hover:bg-opacity-90 transition-all duration-200;
+  }
+
+  .sutra-text {
+    @apply text-dark-brown leading-loose;
+    font-family: "SimSun", "Source Han Serif CN", serif;
+  }
+
+  .decorative-line {
+    @apply my-6 h-px bg-gradient-to-r from-transparent via-primary-gold to-transparent opacity-50;
+  }
+
+  .paper-texture {
+    position: relative;
+    background-image: url('/images/paper-texture.png');
+    background-repeat: repeat;
+    @apply bg-blend-overlay bg-opacity-5;
+  }
+
+  .paper-texture::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/images/lotus-pattern.png');
+    background-repeat: repeat;
+    background-size: 200px;
+    opacity: 0.05;
+    pointer-events: none;
+    background-attachment: fixed;
+  }
+
+  .pressing {
+    transform: scale(0.98);
+    transition: transform 0.2s ease;
+  }
+
+  .btn-primary, .btn-secondary {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover, .btn-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-primary:active, .btn-secondary:active {
+    transform: translateY(1px);
+  }
+}
